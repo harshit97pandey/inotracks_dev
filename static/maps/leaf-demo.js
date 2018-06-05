@@ -168,7 +168,7 @@ function initialize() {
     url: 'http://13.58.183.35/api/get_bus_data_from_time/',
     type: 'POST',
     dataType: 'json',
-    data: data,
+    data: data
   })
   .done(function(data) {
     console.log(data);
