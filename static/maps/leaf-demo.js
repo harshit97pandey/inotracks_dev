@@ -148,18 +148,19 @@ function initialize() {
     type: 'GET',
     dataType: 'json',
   })*/
+	
  bus_number_fetch = request.GET['bus_number'];
  from_time_fetch = request.GET['from_time'];
  to_time_fetch = request.GET['to_time'];
   
  data = {
-	"key": "bd0e7468203f76439a9d4cb3d29a2403cfe49e41e781813e0cdec392cf054dc9",
-	//"bus_number" : "UP53AT8319",
+	 "key": "bd0e7468203f76439a9d4cb3d29a2403cfe49e41e781813e0cdec392cf054dc9",
+	 //"bus_number" : "UP53AT8319",
 	 "bus_number" : bus_number_fetch,
-   //"from_time":"05/07/2017 11:59:46",
-   "from_time": from_time_fetch,
+  	 //"from_time":"05/07/2017 11:59:46",
+   	 "from_time": from_time_fetch,
 	 //"to_time":"06/07/2017 11:59:46"
-   "to_time": to_time_fetch
+   	 "to_time": to_time_fetch
  }
   
   
