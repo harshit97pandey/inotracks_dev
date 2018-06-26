@@ -444,3 +444,59 @@ Invalid login details supplied.
   "status": "error"
 }
 ```
+
+
+## Getting data for all the Buses
+
+* URL: "http://13.58.183.35/api/get_all_bus_data/"
+* Method: POST
+
+  * Json object Expected:
+
+```json
+{
+  "key": "70b66a89929e93416d2ef535893ea14da331da8991cc7c74010b4f3d7fabfd62",
+  "from_time": "yesterday/lastweek/lastmonth/DateTimeField"
+}
+```
+
+example:
+
+```json
+{
+  "key": "70b66a89929e93416d2ef535893ea14da331da8991cc7c74010b4f3d7fabfd62",
+  "from_time" : "yesterday"
+}
+```
+
+* If successful, Json response:
+
+```json
+{
+  "bus_number":{
+    "start_location": {
+      "latitude": ,
+      "time_recorded": "",
+      "longitude": ,
+      "place_name": ""
+    },
+    "driver": "",
+    "last_location": {
+      "latitude": ,
+      "known_location": ,
+      "time_recorded": "",
+      "longitude": ,
+      "place_name": ""
+    }    
+  }
+  "so on.... for all the buses"
+}
+```
+
+* If not successful, Json response:
+
+```json
+{
+  "status": "error"
+}
+```

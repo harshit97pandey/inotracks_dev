@@ -2,7 +2,7 @@ from django.shortcuts import render, Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import UpdateStatus
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 from django.contrib.auth import authenticate
 from Buses.models import *
 
@@ -440,3 +440,76 @@ def get_nearest_bus(request):
 
  else:
   raise Http404("NOT ALLOWED")
+
+
+
+@csrf_exempt
+def get_all_bus_data(request):
+    if request.method == "POST":
+        response_data = {}
+        try:
+            post = json.loads(request.body.decode("utf-8"))
+            if post.get("key") == "70b66a89929e93416d2ef535893ea14da331da8991cc7c74010b4f3d7fabfd62":
+                for bus in Bus.objects.all():
+                    bus_data = {}
+                    last_location = {
+                        "latitude" : bus.location.latitude,
+                        "longitude" : bus.location.longitude,
+                        "place_name":bus.location.place_name,
+                        "known_location":bus.location.known_location,
+                        "time_recorded": str(bus.location.time_recorded),
+                    }
+                    
+                    if post['from_time'] == "yesterday":
+                        from_time=date.today()-timedelta(1)
+                    elif post['from_time'] == "lastweek":
+                        from_time = date.today()-timedelta(7)
+                    elif post['from_time'] == "lastmonth":
+                        today = date.today()
+                        try:
+                            from_time = today.replace(month=today.month-1)
+                        except ValueError:
+                            if today.month == 1:
+                                from_time = today.replace(year=today.year-1,month=12)
+                            else:
+                                raise
+                    else:
+                        from_time = datetime.strptime(post["from_time"], '%d/%m/%Y %H:%M:%S')
+
+                    #print(from_time)
+                    count = Location.objects.filter(bus_number=bus.bus_number,
+                                                                known_location=True,
+                                                                time_recorded__gte=from_time,
+                                                                ).count()
+                    #print(count)
+                    if count == 0:
+                        start_location = "bus not moved after this time"
+                    else:
+                        location = Location.objects.filter(bus_number=bus.bus_number,
+                                                                known_location=True,
+                                                                time_recorded__gte=from_time,
+                                                                ).order_by('time_recorded')[0]
+                        #print(location)
+                        start_location =   {
+                            "latitude": location.latitude,
+                            "longitude": location.longitude,
+                            "place_name":location.place_name,
+                            "time_recorded": str(location.time_recorded),
+                        }
+                    
+                    bus_data = {
+                        "driver":bus.driver,
+                    }
+                    bus_data["start_location"]=start_location
+                    bus_data["last_location"] = last_location 
+                    response_data[bus.bus_number] = bus_data
+            else:
+                response_data['status'] = 'Request Invalid'
+        except Exception as e:
+            response_data['error'] = e
+        return HttpResponse(
+            json.dumps(response_data),
+                content_type = "application/json"
+            )
+    else:
+        raise Http404("NOT ALLOWED")
