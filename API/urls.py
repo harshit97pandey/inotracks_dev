@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^get_json_from_csv/', get_json_from_csv),
 
     url(r'^get_bus_location_from_time/', get_bus_location_from_time),
+    url(r'^get_all_bus_data/',get_all_bus_data),
 ]
 
