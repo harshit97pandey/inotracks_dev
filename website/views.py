@@ -47,7 +47,18 @@ def MapView(request):
 def TabularView(request):
     template = "tabularview.html"
     user = request.user
-    buss=Bus.objects.filter(owner=user).order_by('running_status').reverse()
+    
+    #if the flag=1 the ajax request will be processed else the normal GET request will get processed
+    flag=0
+    if request.is_ajax():
+       _id=request.GET.get('id',1)
+       flag=1
+       buss=Bus.objects.filter(id=_id)
+       #print(_id)
+       
+    if flag==0: 
+       buss=Bus.objects.filter(owner=user).order_by('running_status').reverse()
+
     for bus in buss:
         if not bus.location.known_location:
             base = "https://maps.googleapis.com/maps/api/geocode/json?"
@@ -95,11 +106,8 @@ def TabularView(request):
     'buses':buss,
     'name': user.name,
     'username': user.username,
-
     }
-
-    return render(request, template, context )
-
+    return render(request, template, context)
 
 @login_required(login_url="/login")
 def TimeTableView(request):
