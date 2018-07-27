@@ -6,6 +6,7 @@ from Buses.models import *
 from users.models import *
 from datetime import datetime, timedelta
 
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 def IndexView(request):
@@ -44,10 +45,21 @@ def MapView(request):
     return render(request, template, context)
 
 @login_required(login_url="/login")
+@csrf_exempt
 def TabularView(request):
     template = "tabularview.html"
     user = request.user
-    buss=Bus.objects.filter(owner=user).order_by('running_status').reverse()
+    #if the flag=1 the ajax request will be processed else the normal GET request will get processed
+    flag=0
+    if request.is_ajax():
+       _id=request.GET.get('id',1)
+       flag=1
+       buss=Bus.objects.filter(id=_id)
+       #print(_id)
+       
+    if flag==0: 
+       buss=Bus.objects.filter(owner=user).order_by('running_status').reverse()
+
     for bus in buss:
         if not bus.location.known_location:
             base = "https://maps.googleapis.com/maps/api/geocode/json?"
@@ -83,23 +95,20 @@ def TabularView(request):
         from_time=int(datetime.now().strftime('%Y%m%d%H%M%S'))
         total_locations = Location.objects.filter(bus_number=bus.bus_number).last()
         
-        last_t=int(total_locations.time_recorded.strftime('%Y%m%d%H%M%S'))
+        '''last_t=int(total_locations.time_recorded.strftime('%Y%m%d%H%M%S'))
 
         if from_time-last_t<500 :
             bus.running_status=True
         else :
-            bus.running_status=False
+            bus.running_status=False'''
 
         bus.save()
     context = {
     'buses':buss,
     'name': user.name,
     'username': user.username,
-
     }
-
-    return render(request, template, context )
-
+    return render(request, template, context)
 
 @login_required(login_url="/login")
 def TimeTableView(request):

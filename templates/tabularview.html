@@ -170,7 +170,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       Tabular View
+       Tabular view
       </h1>
 	  </section>
 
@@ -196,15 +196,15 @@
 				<th>Last Update Time</th>
 				<th> Current Speed</th>
 				<th>Km. Travelled</th>
-
+                                <th> Update</th>
 
 			</thead>
 			<tbody>
         {% for bus in buses %}
         {% if bus.running_status == True %}
-				<tr style="background: lightgreen;">
+				<tr id="{{ bus.id }}"style="background: lightgreen;">
         {% else %}
-         <tr style="background: palevioletred;">
+         <tr id="{{ bus.id }}"style="background: palevioletred;">
         {% endif %}
 					<td>{{bus.running_status}}</td>
 
@@ -214,7 +214,7 @@
 					<td>{{bus.location.time_recorded}}</td>
           <td>{{bus.parameters.speed}}</td>
           <td>{{bus.parameters.distance}}</td>
-          <td></td>
+          <td> <button class="refreshbtn"> Refresh </button></td>
         </tr>
         {% endfor %}
 
@@ -239,8 +239,21 @@
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <!-- jQuery 2.2.3 -->
 
+<!--on click of the refresh button-->
 <script>
-  $.widget.bridge('uibutton', $.ui.button);
+$(".refreshbtn").click(function(e) {
+ e.preventDefault();
+ var value=parseInt($(this).closest('tr').attr('id'));
+ var URL="/tabular-view/?id="+ value;
+ //alert(URL);
+// console.log("_id",value);
+
+ $.ajax({
+       type: "GET",
+       url:URL
+   });
+});
+ $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
@@ -271,7 +284,6 @@
 <!--<script src="dist/js/pages/Mapview.js"></script>-->
 <!-- AdminLTE for demo purposes -->
 <script src="/static/dist/js/demo.js"></script>
-
 
 </body>
 </html>
