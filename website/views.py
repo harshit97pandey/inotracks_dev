@@ -49,6 +49,7 @@ def MapView(request):
 def TabularView(request):
     template = "tabularview.html"
     user = request.user
+    
     #if the flag=1 the ajax request will be processed else the normal GET request will get processed
     flag=0
     if request.is_ajax():
