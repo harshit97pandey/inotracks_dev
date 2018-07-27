@@ -170,7 +170,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-       Tabular view
+       Tabular View
       </h1>
 	  </section>
 
@@ -241,6 +241,7 @@
 
 <!--on click of the refresh button-->
 <script>
+ $.widget.bridge('uibutton', $.ui.button);
 $(".refreshbtn").click(function(e) {
  e.preventDefault();
  var value=parseInt($(this).closest('tr').attr('id'));
@@ -254,7 +255,6 @@ $(".refreshbtn").click(function(e) {
        url:URL
    });
 });
- $.widget.bridge('uibutton', $.ui.button);
 </script>
 <!-- Bootstrap 3.3.6 -->
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>

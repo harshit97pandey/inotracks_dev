@@ -6,7 +6,6 @@ from Buses.models import *
 from users.models import *
 from datetime import datetime, timedelta
 
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 def IndexView(request):
@@ -45,7 +44,6 @@ def MapView(request):
     return render(request, template, context)
 
 @login_required(login_url="/login")
-@csrf_exempt
 def TabularView(request):
     template = "tabularview.html"
     user = request.user
@@ -96,12 +94,12 @@ def TabularView(request):
         from_time=int(datetime.now().strftime('%Y%m%d%H%M%S'))
         total_locations = Location.objects.filter(bus_number=bus.bus_number).last()
         
-        '''last_t=int(total_locations.time_recorded.strftime('%Y%m%d%H%M%S'))
+        last_t=int(total_locations.time_recorded.strftime('%Y%m%d%H%M%S'))
 
         if from_time-last_t<500 :
             bus.running_status=True
         else :
-            bus.running_status=False'''
+            bus.running_status=False
 
         bus.save()
     context = {
