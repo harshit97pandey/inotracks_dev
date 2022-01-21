@@ -4,7 +4,7 @@ decorator==4.0.11
 Django==1.9.8
 geopy==1.14.0
 idna==2.5
-ipython==6.1.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 jedi==0.10.2
 pexpect==4.2.1
